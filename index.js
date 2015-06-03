@@ -60,7 +60,7 @@ module.exports = function (opts) {
   }
 
   store.remove = function (opts, cb) {
-    cb(null, true)
+    cb(null, false)
   }
 
   return store
