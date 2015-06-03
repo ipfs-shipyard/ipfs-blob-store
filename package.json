@@ -1,0 +1,42 @@
+{
+  "name": "ipfs-blob-store",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test.js",
+    "lint": "git diff --name-only --cached --relative | egrep .js$ | xargs --no-run-if-empty standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ipfs/ipfs-blob-store"
+  },
+  "keywords": [
+    "ipfs",
+    "blob",
+    "object",
+    "store",
+    "content"
+  ],
+  "author": "Travis Person <travis.person@gmail.com> (http://travisperson.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ipfs/ipfs-blob-store/issues"
+  },
+  "homepage": "https://github.com/ipfs/ipfs-blob-store",
+  "devDependencies": {
+    "abstract-blob-store": "^3.2.0",
+    "tape": "^4.0.0",
+    "pre-commit": "^1.0.6"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "dependencies": {
+    "base58-native": "^0.1.4",
+    "end-of-stream": "^1.1.0",
+    "ipfs-api": "^1.1.7",
+    "multihashes": "^0.1.2",
+    "vinyl": "^0.4.6"
+  }
+}
