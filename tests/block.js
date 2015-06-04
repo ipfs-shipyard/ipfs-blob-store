@@ -4,7 +4,7 @@ var blobs = require('./')
 
 var common = {
   setup: function (t, cb) {
-    var store = blobs()
+    var store = blobs().block
     cb(null, store)
   },
   teardown: function (t, store, blob, cb) {
