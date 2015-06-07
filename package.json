@@ -26,8 +26,9 @@
   "homepage": "https://github.com/ipfs/ipfs-blob-store",
   "devDependencies": {
     "abstract-blob-store": "^3.2.0",
-    "tape": "^4.0.0",
-    "pre-commit": "^1.0.6"
+    "ipfsd-ctl": "^0.2.3",
+    "pre-commit": "^1.0.6",
+    "tape": "^4.0.0"
   },
   "pre-commit": [
     "lint"
@@ -35,7 +36,7 @@
   "dependencies": {
     "base58-native": "^0.1.4",
     "end-of-stream": "^1.1.0",
-    "ipfs-api": "^1.1.7",
+    "ipfs-api": "^2.0.0",
     "multihashes": "^0.1.2",
     "vinyl": "^0.4.6"
   }
