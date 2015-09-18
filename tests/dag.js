@@ -1,10 +1,10 @@
 var test = require('tape')
 var abstractBlobTests = require('abstract-blob-store/tests')
-var blobs = require('./')
+var ipfsBlobStore = require('../index.js')
 
 var common = {
   setup: function (t, cb) {
-    var store = blobs().dag
+    var store = ipfsBlobStore().dag
     cb(null, store)
   },
   teardown: function (t, store, blob, cb) {

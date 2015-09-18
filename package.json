@@ -1,11 +1,11 @@
 {
   "name": "ipfs-blob-store",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "tape test.js",
-    "lint": "git diff --name-only --cached --relative | egrep .js$ | xargs --no-run-if-empty standard"
+    "test": "node tests/dag.js",
+    "lint": "./node_modules/.bin/standard"
   },
   "repository": {
     "type": "git",
@@ -30,12 +30,13 @@
     "pre-commit": "^1.0.6"
   },
   "pre-commit": [
+    "test",
     "lint"
   ],
   "dependencies": {
     "async": "^1.2.0",
     "base58-native": "^0.1.4",
-    "ipfs-api": "^1.1.7",
+    "ipfs-api": "^2.3.2",
     "multihashes": "^0.1.2"
   }
 }
