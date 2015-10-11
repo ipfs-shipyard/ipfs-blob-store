@@ -4,7 +4,10 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "node tests/dag.js",
+    "test-block": "node tests/block.js",
+    "test-dag": "node tests/dag.js",
+    "test-mfs": "node tests/mfs.js",
+    "test": "npm run test-mfs",
     "lint": "./node_modules/.bin/standard"
   },
   "repository": {
