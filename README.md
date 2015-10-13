@@ -5,4 +5,6 @@ ipfs-blob-store
 
 ![](https://github.com/maxogden/abstract-blob-store/raw/master/badge.png)
 
-> Implements the [abstract-blob-store] API, built on top of IPFS.
+> Implements the [abstract-blob-store](https://github.com/maxogden/abstract-blob-store) API, built on top of IPFS.
+
+![](https://github.com/maxogden/abstract-blob-store/raw/master/badge.png)

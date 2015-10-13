@@ -8,7 +8,12 @@ var common = {
     cb(null, store)
   },
   teardown: function (t, store, blob, cb) {
-    cb()
+    store.node.files.rm(store.baseDir, { 'r': true }, function (err) {
+      if (err) {
+        return cb(err)
+      }
+      cb()
+    })
   }
 }
 
