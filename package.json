@@ -29,8 +29,8 @@
   "homepage": "https://github.com/ipfs/ipfs-blob-store",
   "devDependencies": {
     "abstract-blob-store": "^3.2.0",
-    "tape": "^4.0.0",
-    "pre-commit": "^1.0.6"
+    "pre-commit": "^1.0.6",
+    "tape": "^4.0.0"
   },
   "pre-commit": [
     "test",
@@ -40,6 +40,6 @@
     "async": "^1.2.0",
     "base58-native": "^0.1.4",
     "ipfs-api": "git+https://github.com/ipfs/js-ipfs-api.git#275d633",
-    "multihashes": "^0.1.2"
+    "multihashes": "^0.2.0"
   }
 }
