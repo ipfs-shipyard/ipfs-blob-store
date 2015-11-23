@@ -1,10 +1,10 @@
 var test = require('tape')
 var abstractBlobTests = require('abstract-blob-store/tests')
-var ipfsBlobStore = require('../index.js')
+var ipfsBlobStore = require('../src')
 
 var common = {
   setup: function (t, cb) {
-    var store = ipfsBlobStore().mfs
+    var store = ipfsBlobStore()
 
     store.baseDir = '/tests/'
 
