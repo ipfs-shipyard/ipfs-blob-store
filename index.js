@@ -1,6 +1,6 @@
 var ipfs = require('ipfs-api')
-var block = require('./lib/block')
-var dag = require('./lib/dag')
+// var block = require('./lib/block')
+// var dag = require('./lib/dag')
 var mfs = require('./lib/mfs')
 
 module.exports = function (opts) {
@@ -12,8 +12,8 @@ module.exports = function (opts) {
   var node = ipfs(opts.host, opts.port)
 
   return {
-    block: block(node),
-    dag: dag(node),
+    // block: block(node),
+    // dag: dag(node),
     mfs: mfs(node)
   }
 }

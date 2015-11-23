@@ -16,7 +16,7 @@ var common = {
     })
   },
   teardown: function (t, store, blob, cb) {
-    store.node.files.rm(store.baseDir, { 'r': true }, function (err) {
+    store.node.files.rm(store.baseDir, { 'recursive': true }, function (err) {
       if (err) {
         return cb(err)
       }

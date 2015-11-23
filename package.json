@@ -21,7 +21,10 @@
     "store",
     "content"
   ],
-  "author": "Travis Person <travis.person@gmail.com> (http://travisperson.com)",
+  "author": [
+    "David Dias <daviddias@ipfs.io> (http://daviddias.me)",
+    "Travis Person <travis.person@gmail.com> (http://travisperson.com)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ipfs/ipfs-blob-store/issues"
@@ -39,7 +42,7 @@
   "dependencies": {
     "async": "^1.2.0",
     "base58-native": "^0.1.4",
-    "ipfs-api": "git+https://github.com/ipfs/js-ipfs-api.git#f5ae644  ",
+    "ipfs-api": "github:ipfs/js-ipfs-api#ba85b3b",
     "multihashes": "^0.2.0"
   }
 }
