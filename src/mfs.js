@@ -42,24 +42,18 @@ module.exports = function (node) {
       }
 
       function writeBuf () {
-        node.files.write(store.baseDir + opts.key, buffer, { e: true }, function (err) {
+        node.files.write(store.baseDir + opts.key, buffer, { e: true, 'no-flush': true }, function (err) {
           if (err) {
             return cb(err)
           }
 
-          node.files.stat(store.baseDir + opts.key, function (err, res) {
-            if (err) {
-              return cb(err)
-            }
+          var metadata = {
+            key: opts.key, // no need to ref by the res.Hash thanks to mfs
+            size: buffer.length,
+            name: opts.key
+          }
 
-            var metadata = {
-              key: opts.key, // no need to ref by the res.Hash thanks to mfs
-              size: res.Size,
-              name: opts.key
-            }
-
-            cb(null, metadata)
-          })
+          cb(null, metadata)
         })
       }
     })
