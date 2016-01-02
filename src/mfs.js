@@ -30,7 +30,7 @@ module.exports = function (node) {
         var dirPath = opts.key.split('/')
         dirPath.pop()
         dirPath = dirPath.join('/')
-        node.files.mkdir(store.baseDir + dirPath, { p: true }, function (err) {
+        node.files.mkdir(store.baseDir + dirPath, { p: true, 'flush': false }, function (err) {
           if (err) {
             console.error(err)
             return cb(err)
@@ -42,7 +42,7 @@ module.exports = function (node) {
       }
 
       function writeBuf () {
-        node.files.write(store.baseDir + opts.key, buffer, { e: true, 'no-flush': true }, function (err) {
+        node.files.write(store.baseDir + opts.key, buffer, { e: true, 'flush': false }, function (err) {
           if (err) {
             return cb(err)
           }
