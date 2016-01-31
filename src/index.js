@@ -1,13 +1,14 @@
-var ipfs = require('ipfs-api')
+var ipfsAPI = require('ipfs-api')
 var mfs = require('./mfs')
 
-module.exports = function (opts) {
-  if (!opts) opts = {}
+module.exports = function (options) {
+  if (!options) options = {}
 
-  opts.host = opts.host || '127.0.0.1'
-  opts.port = opts.port || 5001
+  options.host = options.host || '127.0.0.1'
+  options.port = options.port || 5001
 
-  var node = ipfs(opts.host, opts.port)
+  var ipfsCtl = ipfsAPI(options.host, options.port)
 
-  return mfs(node)
+  options.ipfsCtl = ipfsCtl
+  return mfs(options)
 }

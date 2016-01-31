@@ -1,9 +1,15 @@
 var stream = require('stream')
 
-module.exports = function (node) {
+module.exports = function (options) {
   var store = {}
-  store.baseDir = '/'
-  store.node = node
+  store.baseDir = options.baseDir || '/'
+  var ipfsCtl = options.ipfsCtl
+  store.ipfsCtl = ipfsCtl
+  if (typeof options.flush === 'boolean' && options.flush === false) {
+    // let it as it is
+  } else {
+    options.flush = true
+  }
 
   store.createWriteStream = function (opts, cb) {
     if (typeof opts === 'string') opts = {key: opts}
@@ -30,7 +36,7 @@ module.exports = function (node) {
         var dirPath = opts.key.split('/')
         dirPath.pop()
         dirPath = dirPath.join('/')
-        node.files.mkdir(store.baseDir + dirPath, { p: true, 'flush': false }, function (err) {
+        ipfsCtl.files.mkdir(store.baseDir + dirPath, { p: true, 'flush': options.flush }, function (err) {
           if (err) {
             console.error(err)
             return cb(err)
@@ -42,7 +48,7 @@ module.exports = function (node) {
       }
 
       function writeBuf () {
-        node.files.write(store.baseDir + opts.key, buffer, { e: true, 'flush': false }, function (err) {
+        ipfsCtl.files.write(store.baseDir + opts.key, buffer, { e: true, 'flush': options.flush }, function (err) {
           if (err) {
             return cb(err)
           }
@@ -67,7 +73,7 @@ module.exports = function (node) {
 
     var passThrough = new stream.PassThrough()
 
-    node.files.read(store.baseDir + opts.key, {}, function (err, stream) {
+    ipfsCtl.files.read(store.baseDir + opts.key, {}, function (err, stream) {
       if (err) {
         return passThrough.emit('error', err)
       }
@@ -83,7 +89,7 @@ module.exports = function (node) {
     if (opts.name) opts.key = opts.name
     if (!cb) cb = noop
 
-    node.files.stat(store.baseDir + opts.key, {}, function (err, res) {
+    ipfsCtl.files.stat(store.baseDir + opts.key, {}, function (err, res) {
       if (err) {
         if (err.code === 0) {
           return cb(null, false)
@@ -100,7 +106,7 @@ module.exports = function (node) {
     if (opts.name) opts.key = opts.name
     if (!cb) cb = noop
 
-    node.files.rm(store.baseDir + opts.key, {}, function (err) {
+    ipfsCtl.files.rm(store.baseDir + opts.key, {}, function (err) {
       if (err) {
         // console.log('error ->', err)
         return cb()

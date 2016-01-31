@@ -4,11 +4,12 @@ var ipfsBlobStore = require('../src')
 
 var common = {
   setup: function (t, cb) {
-    var store = ipfsBlobStore()
+    var options = {
+      baseDir: '/tests/'
+    }
+    var store = ipfsBlobStore(options)
 
-    store.baseDir = '/tests/'
-
-    store.node.files.mkdir(store.baseDir, { p: true }, function (err) {
+    store.ipfsCtl.files.mkdir(options.baseDir, { p: true }, function (err) {
       if (err) {
         return console.error(err)
       }
@@ -16,7 +17,7 @@ var common = {
     })
   },
   teardown: function (t, store, blob, cb) {
-    store.node.files.rm(store.baseDir, { 'recursive': true }, function (err) {
+    store.ipfsCtl.files.rm(store.baseDir, { 'recursive': true }, function (err) {
       if (err) {
         return cb(err)
       }
