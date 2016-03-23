@@ -39,7 +39,7 @@
   "dependencies": {
     "async": "^1.2.0",
     "base58-native": "^0.1.4",
-    "ipfs-api": "github:ipfs/js-ipfs-api#2938470",
+    "ipfs-api": "github:ipfs/js-ipfs-api#1fd9749",
     "multihashes": "^0.2.0"
   }
 }
