@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "node tests/mfs.js",
+    "test": "node tests/blob-store-test.js",
     "lint": "./node_modules/.bin/standard"
   },
   "repository": {
@@ -29,17 +29,15 @@
   "homepage": "https://github.com/ipfs/ipfs-blob-store",
   "devDependencies": {
     "abstract-blob-store": "^3.2.0",
+    "ipfsd-ctl": "^0.9.1",
     "pre-commit": "^1.0.6",
-    "tape": "^4.0.0"
+    "tape": "^4.5.1"
   },
   "pre-commit": [
     "test",
     "lint"
   ],
   "dependencies": {
-    "async": "^1.2.0",
-    "base58-native": "^0.1.4",
-    "ipfs-api": "github:ipfs/js-ipfs-api#1fd9749",
-    "multihashes": "^0.2.0"
+    "ipfs-api": "3.0.0"
   }
 }
