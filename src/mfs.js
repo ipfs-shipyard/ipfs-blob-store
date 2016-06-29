@@ -35,7 +35,6 @@ module.exports = function (options) {
         dirPath = dirPath.join('/')
         ipfsCtl.files.mkdir(store.baseDir + dirPath, { p: true, 'flush': options.flush }, function (err) {
           if (err) {
-            console.error(err)
             return cb(err)
           }
           writeBuf()
