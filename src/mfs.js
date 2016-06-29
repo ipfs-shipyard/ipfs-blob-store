@@ -17,13 +17,10 @@ module.exports = function (options) {
     if (!cb) cb = noop
 
     var bufferStream = new stream.PassThrough()
-    var buffer
+    var buffer = new Buffer(0)
 
     bufferStream.on('data', function (chunk) {
-      if (!buffer) buffer = chunk
-      else {
-        buffer = Buffer.concat([buffer, chunk], buffer.length + chunk.length)
-      }
+      buffer = Buffer.concat([buffer, chunk], buffer.length + chunk.length)
     })
 
     bufferStream.on('end', function () {
@@ -38,7 +35,6 @@ module.exports = function (options) {
         dirPath = dirPath.join('/')
         ipfsCtl.files.mkdir(store.baseDir + dirPath, { p: true, 'flush': options.flush }, function (err) {
           if (err) {
-            console.error(err)
             return cb(err)
           }
           writeBuf()
