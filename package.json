@@ -28,16 +28,17 @@
   },
   "homepage": "https://github.com/ipfs/ipfs-blob-store",
   "devDependencies": {
-    "abstract-blob-store": "^3.2.0",
-    "ipfsd-ctl": "^0.16.0",
-    "pre-commit": "^1.1.3",
-    "tape": "^4.6.2"
+    "abstract-blob-store": "^3.3.2",
+    "go-ipfs-dep": "^0.4.13",
+    "ipfsd-ctl": "^0.27.1",
+    "pre-commit": "^1.2.2",
+    "tape": "^4.8.0"
   },
   "pre-commit": [
     "test",
     "lint"
   ],
   "dependencies": {
-    "ipfs-api": "9.0.0"
+    "ipfs-api": "17.5.0"
   }
 }

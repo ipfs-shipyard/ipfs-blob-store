@@ -1,5 +1,5 @@
-var ipfsAPI = require('ipfs-api')
-var mfs = require('./mfs')
+const ipfsAPI = require('ipfs-api')
+const mfs = require('./mfs')
 
 module.exports = function (options) {
   if (!options) options = {}
