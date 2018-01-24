@@ -71,6 +71,10 @@ module.exports = function (options) {
 
     ipfsCtl.files.read(store.baseDir + opts.key, {}, (err, stream) => {
       if (err) {
+        if (err.toString().indexOf('does not exist') > -1) {
+          err.notFound = true
+        }
+
         return passThrough.emit('error', err)
       }
 
