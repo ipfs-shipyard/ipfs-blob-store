@@ -8,6 +8,7 @@
 ![](https://img.shields.io/badge/coverage-%3F-yellow.svg?style=flat-square)
 [![Dependency Status](https://david-dm.org/ipfs-shipyard/ipfs-blob-store.svg?style=flat-square)](https://david-dm.org/ipfs-shipyard/ipfs-blob-store)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/feross/standard)
+[![npm](https://img.shields.io/npm/v/ipfs-blob-store.svg)](http://npmjs.com/package/ipfs-blob-store)
 
 > An abstract-blob-store compatible implementation built using IPFS as the storage backend
 
