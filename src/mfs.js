@@ -1,4 +1,4 @@
-var stream = require('stream')
+const stream = require('stream')
 
 module.exports = function (options) {
   var store = {}
@@ -69,8 +69,12 @@ module.exports = function (options) {
 
     var passThrough = new stream.PassThrough()
 
-    ipfsCtl.files.read(store.baseDir + opts.key, {}, function (err, stream) {
+    ipfsCtl.files.read(store.baseDir + opts.key, {}, (err, stream) => {
       if (err) {
+        if (err.toString().indexOf('does not exist') > -1) {
+          err.notFound = true
+        }
+
         return passThrough.emit('error', err)
       }
 
@@ -85,7 +89,7 @@ module.exports = function (options) {
     if (opts.name) opts.key = opts.name
     if (!cb) cb = noop
 
-    ipfsCtl.files.stat(store.baseDir + opts.key, {}, function (err, res) {
+    ipfsCtl.files.stat(store.baseDir + opts.key, {}, (err, res) => {
       if (err) {
         if (err.code === 0) {
           return cb(null, false)
@@ -102,12 +106,9 @@ module.exports = function (options) {
     if (opts.name) opts.key = opts.name
     if (!cb) cb = noop
 
-    ipfsCtl.files.rm(store.baseDir + opts.key, {}, function (err) {
+    ipfsCtl.files.rm(store.baseDir + opts.key, {}, (err) => {
       if (err) {
-        // console.log('error ->', err)
-        return cb()
-        // TODO files API is responding with 500 (probably cause of bitswap)
-        // return cb(err)
+        return cb(err)
       }
 
       cb()
