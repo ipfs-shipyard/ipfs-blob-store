@@ -18,9 +18,11 @@
     "store",
     "content"
   ],
-  "author": [
+  "author": "IPFS",
+  "contributors": [
     "David Dias <daviddias@ipfs.io> (http://daviddias.me)",
-    "Travis Person <travis.person@gmail.com> (http://travisperson.com)"
+    "Travis Person <travis.person@gmail.com> (http://travisperson.com)",
+    "Henrique Dias <hacdias@gmail.com> (https://hacdias.com)"
   ],
   "license": "MIT",
   "bugs": {
