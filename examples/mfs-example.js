@@ -1,3 +1,5 @@
+'use strict'
+
 var ipfsBlobStore = require('../index.js')
 var store = ipfsBlobStore().mfs
 
