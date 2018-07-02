@@ -1,3 +1,5 @@
+'use strict'
+
 const ipfsAPI = require('ipfs-api')
 const mfs = require('./mfs')
 

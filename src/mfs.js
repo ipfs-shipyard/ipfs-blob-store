@@ -1,8 +1,16 @@
+'use strict'
+
 const stream = require('stream')
+const path = require('path')
 
 module.exports = function (options) {
   var store = {}
   store.baseDir = options.baseDir || '/'
+
+  if (!store.baseDir.endsWith('/')) {
+    store.baseDir += '/'
+  }
+
   var ipfsCtl = options.ipfsCtl
   store.ipfsCtl = ipfsCtl
   if (typeof options.flush === 'boolean' && options.flush === false) {
@@ -16,8 +24,10 @@ module.exports = function (options) {
     if (opts.name) opts.key = opts.name
     if (!cb) cb = noop
 
-    var bufferStream = new stream.PassThrough()
-    var buffer = new Buffer(0)
+    const writePath = normalisePath(store.baseDir + opts.key)
+    const directory = path.dirname(writePath)
+    const bufferStream = new stream.PassThrough()
+    let buffer = Buffer.alloc(0)
 
     bufferStream.on('data', function (chunk) {
       buffer = Buffer.concat([buffer, chunk], buffer.length + chunk.length)
@@ -26,17 +36,13 @@ module.exports = function (options) {
     bufferStream.on('end', function () {
       // nested, must make sure we have all the dirs along the way
       // https://github.com/ipfs/ipfs-blob-store/pull/5#discussion_r44748249
-      if (opts.key[0] === '/') {
-        opts.key = opts.key.slice(1)
-      }
-      if (opts.key.indexOf('/') > -1) {
-        var dirPath = opts.key.split('/')
-        dirPath.pop()
-        dirPath = dirPath.join('/')
-        ipfsCtl.files.mkdir(store.baseDir + dirPath, { p: true, 'flush': options.flush }, function (err) {
+
+      if (`${directory}/` !== store.baseDir) {
+        ipfsCtl.files.mkdir(directory, { p: true, flush: options.flush }, function (err) {
           if (err) {
             return cb(err)
           }
+
           writeBuf()
         })
       } else {
@@ -44,12 +50,12 @@ module.exports = function (options) {
       }
 
       function writeBuf () {
-        ipfsCtl.files.write(store.baseDir + opts.key, buffer, { e: true, 'flush': options.flush }, function (err) {
+        ipfsCtl.files.write(writePath, buffer, { e: true, flush: options.flush }, function (err) {
           if (err) {
             return cb(err)
           }
 
-          var metadata = {
+          const metadata = {
             key: opts.key, // no need to ref by the res.Hash thanks to mfs
             size: buffer.length,
             name: opts.key
@@ -67,18 +73,23 @@ module.exports = function (options) {
     if (typeof opts === 'string') opts = {key: opts}
     if (opts.name) opts.key = opts.name
 
-    var passThrough = new stream.PassThrough()
+    const passThrough = new stream.PassThrough()
+    const readPath = normalisePath(store.baseDir + opts.key)
 
-    ipfsCtl.files.read(store.baseDir + opts.key, {}, (err, stream) => {
+    ipfsCtl.files.read(readPath, {}, (err, stream) => {
       if (err) {
-        if (err.toString().indexOf('does not exist') > -1) {
+        if (err.toString().indexOf('does not exist') > -1 || err.toString().indexOf('Not a directory') > -1) {
           err.notFound = true
         }
 
         return passThrough.emit('error', err)
       }
 
-      stream.pipe(passThrough)
+      if (stream.pipe) {
+        stream.pipe(passThrough)
+      } else {
+        passThrough.end(stream)
+      }
     })
 
     return passThrough
@@ -89,7 +100,9 @@ module.exports = function (options) {
     if (opts.name) opts.key = opts.name
     if (!cb) cb = noop
 
-    ipfsCtl.files.stat(store.baseDir + opts.key, {}, (err, res) => {
+    const statPath = normalisePath(store.baseDir + opts.key)
+
+    ipfsCtl.files.stat(statPath, {}, (err) => {
       if (err) {
         if (err.code === 0) {
           return cb(null, false)
@@ -106,7 +119,9 @@ module.exports = function (options) {
     if (opts.name) opts.key = opts.name
     if (!cb) cb = noop
 
-    ipfsCtl.files.rm(store.baseDir + opts.key, {}, (err) => {
+    const rmPath = normalisePath(store.baseDir + opts.key)
+
+    ipfsCtl.files.rm(rmPath, {}, (err) => {
       if (err) {
         return cb(err)
       }
@@ -119,3 +134,7 @@ module.exports = function (options) {
 }
 
 function noop () {}
+
+function normalisePath (path) {
+  return path.replace(/\/(\/)+/g, '/')
+}
