@@ -33,7 +33,7 @@
     "abstract-blob-store": "^3.3.2",
     "aegir": "^14.0.0",
     "go-ipfs-dep": "~0.4.13",
-    "ipfsd-ctl": "~0.37.4",
+    "ipfsd-ctl": "~0.37.5",
     "pre-commit": "^1.2.2",
     "tape": "^4.8.0"
   },
