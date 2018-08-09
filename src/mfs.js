@@ -2,6 +2,7 @@
 
 const stream = require('stream')
 const path = require('path')
+const log = require('debug')('ipfs:blob-store:mfs')
 
 module.exports = function (options) {
   var store = {}
@@ -25,46 +26,29 @@ module.exports = function (options) {
     if (!cb) cb = noop
 
     const writePath = normalisePath(store.baseDir + opts.key)
-    const directory = path.dirname(writePath)
     const bufferStream = new stream.PassThrough()
-    let buffer = Buffer.alloc(0)
 
-    bufferStream.on('data', function (chunk) {
-      buffer = Buffer.concat([buffer, chunk], buffer.length + chunk.length)
+    let size = 0
+
+    bufferStream.on('data', (buffer) => {
+      size += buffer.length
     })
 
-    bufferStream.on('end', function () {
-      // nested, must make sure we have all the dirs along the way
-      // https://github.com/ipfs/ipfs-blob-store/pull/5#discussion_r44748249
-
-      if (`${directory}/` !== store.baseDir) {
-        ipfsCtl.files.mkdir(directory, { p: true, flush: options.flush }, function (err) {
-          if (err) {
-            return cb(err)
-          }
-
-          writeBuf()
-        })
-      } else {
-        writeBuf()
-      }
-
-      function writeBuf () {
-        ipfsCtl.files.write(writePath, buffer, { e: true, flush: options.flush }, function (err) {
-          if (err) {
-            return cb(err)
-          }
-
-          const metadata = {
-            key: opts.key, // no need to ref by the res.Hash thanks to mfs
-            size: buffer.length,
-            name: opts.key
-          }
-
-          cb(null, metadata)
-        })
-      }
+    ipfsCtl.files.write(writePath, bufferStream, {
+      create: true,
+      parents: true,
+      flush: options.flush
     })
+      .then(() => {
+        cb(null, {
+          key: opts.key,
+          size: size,
+          name: path.basename(writePath)
+        })
+      })
+      .catch(error => {
+        cb(error)
+      })
 
     return bufferStream
   }
@@ -73,26 +57,18 @@ module.exports = function (options) {
     if (typeof opts === 'string') opts = {key: opts}
     if (opts.name) opts.key = opts.name
 
-    const passThrough = new stream.PassThrough()
     const readPath = normalisePath(store.baseDir + opts.key)
 
-    ipfsCtl.files.read(readPath, {}, (err, stream) => {
-      if (err) {
-        if (err.toString().indexOf('does not exist') > -1 || err.toString().indexOf('Not a directory') > -1) {
-          err.notFound = true
-        }
+    log(`read ${readPath}`)
+    const readableStream = ipfsCtl.files.readReadableStream(readPath)
 
-        return passThrough.emit('error', err)
-      }
-
-      if (stream.pipe) {
-        stream.pipe(passThrough)
-      } else {
-        passThrough.end(stream)
+    readableStream.on('error', (error) => {
+      if (error.toString().indexOf('does not exist') > -1 || error.toString().indexOf('Not a directory') > -1) {
+        error.notFound = true
       }
     })
 
-    return passThrough
+    return readableStream
   }
 
   store.exists = function (opts, cb) {
@@ -102,11 +78,13 @@ module.exports = function (options) {
 
     const statPath = normalisePath(store.baseDir + opts.key)
 
+    log(`stat ${statPath}`)
     ipfsCtl.files.stat(statPath, {}, (err) => {
       if (err) {
         if (err.code === 0) {
           return cb(null, false)
         }
+
         return cb(err)
       }
 
@@ -121,13 +99,8 @@ module.exports = function (options) {
 
     const rmPath = normalisePath(store.baseDir + opts.key)
 
-    ipfsCtl.files.rm(rmPath, {}, (err) => {
-      if (err) {
-        return cb(err)
-      }
-
-      cb()
-    })
+    log(`rm ${rmPath}`)
+    ipfsCtl.files.rm(rmPath, cb)
   }
 
   return store
