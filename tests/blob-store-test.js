@@ -1,6 +1,6 @@
 const test = require('tape')
 const abstractBlobTests = require('abstract-blob-store/tests')
-const ipfsBlobStore = require('../src')
+const ipfsBlobStore = require('../')
 const DaemonFactory = require('ipfsd-ctl')
 const df = DaemonFactory.create()
 
@@ -21,14 +21,15 @@ df.spawn({
 })
 
 var common = {
-  setup: function (t, cb) {
+  setup: async function (t, cb) {
     var options = {
       baseDir: '/tests/',
-      port: 13000
+      port: 13000,
+      host: '127.0.0.1'
     }
-    var store = ipfsBlobStore(options)
+    var store = await ipfsBlobStore(options)
 
-    store.ipfsCtl.files.mkdir(options.baseDir, { p: true }, (err) => {
+    store.ipfs.files.mkdir(options.baseDir, { p: true }, (err) => {
       if (err) {
         return console.error(err)
       }
@@ -36,7 +37,7 @@ var common = {
     })
   },
   teardown: function (t, store, blob, cb) {
-    store.ipfsCtl.files.rm(store.baseDir, { recursive: true }, (err) => {
+    store.ipfs.files.rm(store.baseDir, { recursive: true }, (err) => {
       if (err) {
         return cb(err)
       }

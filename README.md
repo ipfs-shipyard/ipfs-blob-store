@@ -23,35 +23,75 @@ npm install ipfs-blob-store
 
 ## Usage
 
-`ipfs-blob-store` today requires a running [IPFS daemon](https://github.com/ipfs/go-ipfs/) to talk to over HTTP. This module will be able to be entirely self-contained once [js-ipfs](https://github.com/ipfs/js-ipfs) is complete.
-
 `ipfs-blob-store` uses the [IPFS Files API](#) to create the abstraction of a mutable filesystem over snapshots of Merkle DAGs (per mutation). You'll need to use the Files API directly to get the `/ipfs/Qm...` address of the filesystem root so that other IPFS nodes can retrieve it.
 
-```JavaScript
-var ipfsBlobStore = require('ipfs-blob-store')
+It requires an IPFS node to run - you can either specify a host/port combination to connect to a remote daemon, pass an instance of [`ipfs`](https://www.npmjs.com/package/ipfs) or nothing at all to have the blob store manage it's own IPFS node.
 
+### Self-managed IPFS node
+
+```JavaScript
+const ipfsBlobStore = require('ipfs-blob-store')
+
+const store = await ipfsBlobStore()
+
+store.exists('/my-file.txt', (error, exists) => {
+  // ...
+})
+```
+
+### Pre-configured IPFS node
+
+```JavaScript
+const ipfsBlobStore = require('ipfs-blob-store')
+const IPFS = require('ipfs')
+
+const node = new IPFS({
+  // some config here
+})
+
+node.once('ready', () => {
+  const store = await ipfsBlobStore({
+    ipfs: node
+  })
+
+  store.exists('/my-file.txt', (error, exists) => {
+    // ...
+  })
+})
+```
+
+### Remote IPFS daemon
+
+```JavaScript
+const ipfsBlobStore = require('ipfs-blob-store')
+
+const store = await ipfsBlobStore({
+  host: '127.0.0.1',
+  port: 5001
+})
+
+store.exists('/my-file.txt', (error, exists) => {
+  // ...
+})
+```
+
+### Options
+
+```JavaScript
 var options = {
+  ipfs: null, // an instance of ipfs or ipfs-api
   port: 5001,   // default value
   host: '127.0.0.1', // default value
   baseDir: '/', // default value
   flush: true  // default value
 }
 
-var store = ipfsBlobStore(options)
-
-var ws = store.createWriteStream({
-  key: 'some/path/file.txt'
-})
-
-ws.write('hello world\n')
-ws.end(function() {
-  var rs = store.createReadStream({
-    key: 'some/path/file.txt'
-  })
-
-  rs.pipe(process.stdout)
-})
+const store = await ipfsBlobStore(options)
 ```
+
+### API
+
+See [abstract-blob-store](https://www.npmjs.com/package/abstract-blob-store) for the blob store API.
 
 ## Contribute
 
