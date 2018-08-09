@@ -31,9 +31,9 @@
   "homepage": "https://github.com/ipfs/ipfs-blob-store",
   "devDependencies": {
     "abstract-blob-store": "^3.3.2",
-    "aegir": "^14.0.0",
+    "aegir": "^15.0.0",
     "go-ipfs-dep": "~0.4.13",
-    "ipfsd-ctl": "~0.37.5",
+    "ipfsd-ctl": "~0.39.0",
     "pre-commit": "^1.2.2",
     "tape": "^4.8.0"
   },
@@ -42,6 +42,7 @@
     "lint"
   ],
   "dependencies": {
-    "ipfs-api": "^22.1.0"
+    "debug": "^3.1.0",
+    "ipfs-api": "^23.0.0"
   }
 }
