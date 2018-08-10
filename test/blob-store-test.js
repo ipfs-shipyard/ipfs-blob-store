@@ -3,21 +3,29 @@ const abstractBlobTests = require('abstract-blob-store/tests')
 const ipfsBlobStore = require('../')
 const DaemonFactory = require('ipfsd-ctl')
 const df = DaemonFactory.create()
+const which = require('which')
 
-df.spawn({
-  disposable: true,
-  args: ['--api=/ip4/127.0.0.1/tcp/13000']
-}, (err, node) => {
-  if (err) {
-    throw err
+which('ipfs', (error, ipfs) => {
+  if (error) {
+    throw error
   }
 
-  abstractBlobTests(test, common)
-  // quick hack to stop the deamon
-  // TODO clean up later
-  setTimeout(function () {
-    node.stop(() => {})
-  }, 5000)
+  df.spawn({
+    disposable: true,
+    args: ['--api=/ip4/127.0.0.1/tcp/13000'],
+    exec: ipfs
+  }, (err, node) => {
+    if (err) {
+      throw err
+    }
+
+    abstractBlobTests(test, common)
+    // quick hack to stop the deamon
+    // TODO clean up later
+    setTimeout(function () {
+      node.stop(() => {})
+    }, 5000)
+  })
 })
 
 var common = {
