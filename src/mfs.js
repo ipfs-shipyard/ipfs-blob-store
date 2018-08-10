@@ -12,8 +12,8 @@ module.exports = function (options) {
     store.baseDir += '/'
   }
 
-  var ipfsCtl = options.ipfsCtl
-  store.ipfsCtl = ipfsCtl
+  var ipfs = options.ipfs
+  store.ipfs = ipfs
   if (typeof options.flush === 'boolean' && options.flush === false) {
     // let it as it is
   } else {
@@ -34,7 +34,7 @@ module.exports = function (options) {
       size += buffer.length
     })
 
-    ipfsCtl.files.write(writePath, bufferStream, {
+    ipfs.files.write(writePath, bufferStream, {
       create: true,
       parents: true,
       flush: options.flush
@@ -60,7 +60,7 @@ module.exports = function (options) {
     const readPath = normalisePath(store.baseDir + opts.key)
 
     log(`read ${readPath}`)
-    const readableStream = ipfsCtl.files.readReadableStream(readPath)
+    const readableStream = ipfs.files.readReadableStream(readPath)
 
     readableStream.on('error', (error) => {
       if (error.toString().indexOf('does not exist') > -1 || error.toString().indexOf('Not a directory') > -1) {
@@ -79,7 +79,7 @@ module.exports = function (options) {
     const statPath = normalisePath(store.baseDir + opts.key)
 
     log(`stat ${statPath}`)
-    ipfsCtl.files.stat(statPath, {}, (err) => {
+    ipfs.files.stat(statPath, {}, (err) => {
       if (err) {
         if (err.code === 0) {
           return cb(null, false)
@@ -100,7 +100,7 @@ module.exports = function (options) {
     const rmPath = normalisePath(store.baseDir + opts.key)
 
     log(`rm ${rmPath}`)
-    ipfsCtl.files.rm(rmPath, cb)
+    ipfs.files.rm(rmPath, cb)
   }
 
   return store

@@ -2,7 +2,7 @@
   "name": "ipfs-blob-store",
   "version": "1.2.0",
   "description": "An abstract-blob-store compatible implementation built using IPFS as the storage backend",
-  "main": "src/index.js",
+  "main": "src/create.js",
   "scripts": {
     "test": "node tests/blob-store-test.js",
     "lint": "aegir lint"
@@ -32,8 +32,6 @@
   "devDependencies": {
     "abstract-blob-store": "^3.3.2",
     "aegir": "^15.0.0",
-    "go-ipfs-dep": "~0.4.13",
-    "ipfsd-ctl": "~0.39.0",
     "pre-commit": "^1.2.2",
     "tape": "^4.8.0"
   },
@@ -43,6 +41,8 @@
   ],
   "dependencies": {
     "debug": "^3.1.0",
-    "ipfs-api": "^23.0.0"
+    "ipfs": "~0.31.4",
+    "ipfs-api": "^23.0.0",
+    "promisify-es6": "^1.0.3"
   }
 }
