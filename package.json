@@ -32,13 +32,8 @@
   "devDependencies": {
     "abstract-blob-store": "^3.3.2",
     "aegir": "^15.0.0",
-    "pre-commit": "^1.2.2",
     "tape": "^4.8.0"
   },
-  "pre-commit": [
-    "test",
-    "lint"
-  ],
   "dependencies": {
     "debug": "^3.1.0",
     "ipfs": "~0.31.4",

@@ -75,7 +75,7 @@ store.exists('/my-file.txt', (error, exists) => {
 })
 ```
 
-### Options
+### Options
 
 ```JavaScript
 var options = {
@@ -89,7 +89,7 @@ var options = {
 const store = await ipfsBlobStore(options)
 ```
 
-### API
+### API
 
 See [abstract-blob-store](https://www.npmjs.com/package/abstract-blob-store) for the blob store API.
 
