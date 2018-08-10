@@ -40,6 +40,7 @@
   "devDependencies": {
     "abstract-blob-store": "^3.3.2",
     "aegir": "^15.0.0",
+    "ipfs": "~0.31.4",
     "ipfsd-ctl": "~0.39.1",
     "tape": "^4.8.0"
   },
