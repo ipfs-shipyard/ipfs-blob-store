@@ -1,3 +1,5 @@
+'use strict'
+
 const test = require('tape')
 const abstractBlobTests = require('abstract-blob-store/tests')
 const ipfsBlobStore = require('../')
@@ -28,28 +30,21 @@ which('ipfs', (error, ipfs) => {
   })
 })
 
-var common = {
-  setup: async function (t, cb) {
-    var options = {
-      baseDir: '/tests/',
-      port: 13000,
-      host: '127.0.0.1'
-    }
-    var store = await ipfsBlobStore(options)
-
-    store.ipfs.files.mkdir(options.baseDir, { p: true }, (err) => {
-      if (err) {
-        return console.error(err)
-      }
-      cb(null, store)
-    })
+let store
+const options = {
+  baseDir: '/tests/',
+  port: 13000,
+  host: '127.0.0.1'
+}
+const common = {
+  setup: async (t, cb) => {
+    store = await ipfsBlobStore(options)
+    await store.ipfs.files.mkdir(options.baseDir, { p: true })
+    cb(null, store)
   },
-  teardown: function (t, store, blob, cb) {
-    store.ipfs.files.rm(store.baseDir, { recursive: true }, (err) => {
-      if (err) {
-        return cb(err)
-      }
-      cb()
-    })
+
+  teardown: async (t, store, blob, cb) => {
+    await store.ipfs.files.rm(options.baseDir, { recursive: true })
+    cb()
   }
 }

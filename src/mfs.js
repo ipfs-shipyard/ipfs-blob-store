@@ -5,14 +5,14 @@ const path = require('path')
 const log = require('debug')('ipfs:blob-store:mfs')
 
 module.exports = function (options) {
-  var store = {}
+  const store = {}
   store.baseDir = options.baseDir || '/'
 
   if (!store.baseDir.endsWith('/')) {
     store.baseDir += '/'
   }
 
-  var ipfs = options.ipfs
+  const ipfs = options.ipfs
   store.ipfs = ipfs
   if (typeof options.flush === 'boolean' && options.flush === false) {
     // let it as it is
