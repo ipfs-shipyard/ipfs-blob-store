@@ -1,3 +1,14 @@
+<a name="2.0.1"></a>
+## [2.0.1](https://github.com/ipfs-shipyard/ipfs-blob-store/compare/v2.0.0...v2.0.1) (2018-08-13)
+
+
+### Bug Fixes
+
+* use bundled ipfs in tests ([b2e6e8f](https://github.com/ipfs-shipyard/ipfs-blob-store/commit/b2e6e8f))
+* use the message instead of the code ([0e5a3c0](https://github.com/ipfs-shipyard/ipfs-blob-store/commit/0e5a3c0))
+
+
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/ipfs-shipyard/ipfs-blob-store/compare/v1.2.0...v2.0.0) (2018-08-13)
 
