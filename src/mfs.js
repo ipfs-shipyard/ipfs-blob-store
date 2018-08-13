@@ -79,13 +79,13 @@ module.exports = function (options) {
     const statPath = normalisePath(store.baseDir + opts.key)
 
     log(`stat ${statPath}`)
-    ipfs.files.stat(statPath, {}, (err) => {
-      if (err) {
-        if (err.code === 0) {
+    ipfs.files.stat(statPath, {}, (error) => {
+      if (error) {
+        if (error.toString().indexOf('does not exist') > -1 || error.toString().indexOf('Not a directory') > -1) {
           return cb(null, false)
         }
 
-        return cb(err)
+        return cb(error)
       }
 
       cb(null, true)
