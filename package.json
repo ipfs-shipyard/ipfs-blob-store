@@ -1,6 +1,6 @@
 {
   "name": "ipfs-blob-store",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "An abstract-blob-store compatible implementation built using IPFS as the storage backend",
   "main": "src/index.js",
   "browser": {
