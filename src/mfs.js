@@ -21,7 +21,7 @@ module.exports = function (options) {
   }
 
   store.createWriteStream = function (opts, cb) {
-    if (typeof opts === 'string') opts = {key: opts}
+    if (typeof opts === 'string') opts = { key: opts }
     if (opts.name) opts.key = opts.name
     if (!cb) cb = noop
 
@@ -54,7 +54,7 @@ module.exports = function (options) {
   }
 
   store.createReadStream = function (opts) {
-    if (typeof opts === 'string') opts = {key: opts}
+    if (typeof opts === 'string') opts = { key: opts }
     if (opts.name) opts.key = opts.name
 
     const readPath = normalisePath(store.baseDir + opts.key)
@@ -63,7 +63,7 @@ module.exports = function (options) {
     const readableStream = ipfs.files.readReadableStream(readPath)
 
     readableStream.on('error', (error) => {
-      if (error.toString().indexOf('does not exist') > -1 || error.toString().indexOf('Not a directory') > -1) {
+      if (isNotFoundError(error)) {
         error.notFound = true
       }
     })
@@ -72,7 +72,7 @@ module.exports = function (options) {
   }
 
   store.exists = function (opts, cb) {
-    if (typeof opts === 'string') opts = {key: opts}
+    if (typeof opts === 'string') opts = { key: opts }
     if (opts.name) opts.key = opts.name
     if (!cb) cb = noop
 
@@ -80,20 +80,20 @@ module.exports = function (options) {
 
     log(`stat ${statPath}`)
     ipfs.files.stat(statPath, {}, (error) => {
-      if (error) {
-        if (error.toString().indexOf('does not exist') > -1 || error.toString().indexOf('Not a directory') > -1) {
-          return cb(null, false)
-        }
-
-        return cb(error)
+      if (!error) {
+        return cb(null, true)
       }
 
-      cb(null, true)
+      if (isNotFoundError(error)) {
+        return cb(null, false)
+      }
+
+      return cb(error)
     })
   }
 
   store.remove = function (opts, cb) {
-    if (typeof opts === 'string') opts = {key: opts}
+    if (typeof opts === 'string') opts = { key: opts }
     if (opts.name) opts.key = opts.name
     if (!cb) cb = noop
 
@@ -110,4 +110,8 @@ function noop () {}
 
 function normalisePath (path) {
   return path.replace(/\/(\/)+/g, '/')
+}
+
+function isNotFoundError (error) {
+  return error.toString().indexOf('does not exist') > -1 || error.toString().indexOf('Not a directory') > -1
 }
