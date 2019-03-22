@@ -1,8 +1,7 @@
 'use strict'
 
-const promisify = require('promisify-es6')
 const IPFS = require('ipfs')
-const remote = require('ipfs-api')
+const remote = require('ipfs-http-client')
 const mfs = require('./mfs')
 const log = require('debug')('ipfs:blob-store:create')
 const defaultOptions = {
@@ -11,43 +10,31 @@ const defaultOptions = {
   baseDir: '/'
 }
 
-module.exports = promisify((opts, callback) => {
-  if (typeof opts === 'function') {
-    callback = opts
-    opts = defaultOptions
-  }
-
+module.exports = async (opts) => {
   const options = Object.assign({}, defaultOptions, opts)
 
   if (options.ipfs) {
     log('Using pre-configured IPFS instance')
-    return setImmediate(() => callback(null, mfs(options)))
+    return mfs(options)
   }
 
   if (options.host && options.port) {
     log(`Connecting to remote IPFS at ${options.host}:${options.port}`)
     options.ipfs = remote(options.host, options.port)
 
-    return setImmediate(() => callback(null, mfs(options)))
+    return mfs(options)
   }
 
   log(`Starting an IPFS instance`)
-  callback = once(callback)
 
-  options.ipfs = new IPFS()
-  options.ipfs.once('ready', () => callback(null, mfs(options)))
-  options.ipfs.once('error', (error) => callback(error))
-})
+  options.ipfs = await getIPFSReadyNode()
+  return mfs(options)
+}
 
-function once (cb) {
-  let called = false
-
-  return function () {
-    if (called) {
-      return
-    }
-
-    called = true
-    cb.apply(null, arguments)
-  }
+function getIPFSReadyNode () {
+  return new Promise((resolve, reject) => {
+    const ipfs = new IPFS()
+    ipfs.once('ready', () => resolve(ipfs))
+    ipfs.once('error', reject)
+  })
 }
